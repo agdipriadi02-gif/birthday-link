@@ -66,7 +66,8 @@ function clearError() {
 }
 
 /* ── DATA ─────────────────────────────────── */
-let heartData   = JSON.parse(localStorage.getItem("bubu_heart") || "{}");
+let heartData = {};
+try { heartData = JSON.parse(localStorage.getItem("bubu_heart") || "{}"); } catch(ex) {}
 let heartTarget = -1;
 let lbSrc       = "";
 
@@ -214,7 +215,13 @@ function setHeartPhoto(idx, src) {
   const imgEl = document.getElementById(`hi-${idx}`);
   if (!imgEl) return;
   const ph = imgEl.parentElement.querySelector(".hs-ph-sq");
-  imgEl.src = src;
+  
+  let finalSrc = src;
+  if (src && !src.startsWith("data:") && !src.includes("?")) {
+    finalSrc = src + "?v=" + new Date().getTime();
+  }
+  
+  imgEl.src = finalSrc;
   imgEl.classList.remove("hidden");
   if (ph) ph.style.display = "none";
 }
