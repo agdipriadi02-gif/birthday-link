@@ -166,10 +166,13 @@ function autoLoadPhotos() {
       const img = new Image();
       const src = `${name}.${exts[i]}`;
       img.onload = () => {
-        if (!heartData[idx] || !heartData[idx].src) {
+        const currentSrc = heartData[idx]?.src;
+        // Overwrite stale local file paths to handle renamed extensions (e.g. foto3.jpg -> foto3.webp)
+        if (!currentSrc || !currentSrc.startsWith("data:")) {
           if (!heartData[idx]) heartData[idx] = {};
           heartData[idx].src = src;
           setHeartPhoto(idx, src);
+          try { localStorage.setItem("bubu_heart", JSON.stringify(heartData)); } catch(ex) {}
         }
       };
       img.onerror = () => tryLoad(exts, i + 1);
