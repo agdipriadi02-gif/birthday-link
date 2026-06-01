@@ -78,13 +78,10 @@ let musicStopFn = null;
 /* ── PHOTO SLOTS ──────────────────────────── */
 // Files: foto1.jpg (or .webp) placed in project root
 const PHOTO_SLOTS = [
-  {name:"foto1",  ext:"jpg"},  {name:"foto2",  ext:"webp"},
-  {name:"foto3",  ext:"webp"}, {name:"foto4",  ext:"jpg"},
-  {name:"foto5",  ext:"jpg"},  {name:"foto6",  ext:"jpg"},
-  {name:"foto7",  ext:"jpg"},  {name:"foto8",  ext:"jpg"},
-  {name:"foto9",  ext:"jpg"},  {name:"foto10", ext:"jpg"},
-  {name:"foto11", ext:"jpg"},  {name:"foto12", ext:"jpg"},
-  {name:"foto13", ext:"jpg"},
+  "foto1.jpg",  "foto2.webp",  "foto3.webp", "foto4.jpg",
+  "foto5.jpg",  "foto6.jpg",   "foto7.jpg",  "foto8.jpg",
+  "foto9.jpg",  "foto10.jpg",  "foto11.jpg", "foto12.jpg",
+  "foto13.jpg"
 ];
 const EXTS = ["jpg","jpeg","png","webp"];
 
@@ -160,27 +157,15 @@ function initPetals(id) {
    AUTO-LOAD LOCAL PHOTOS INTO HEART
    ============================================ */
 function autoLoadPhotos() {
-  PHOTO_SLOTS.forEach(({name, ext}, idx) => {
-    const tryLoad = (exts, i) => {
-      if (i >= exts.length) return;
-      const img = new Image();
-      const src = `${name}.${exts[i]}`;
-      img.onload = () => {
-        const currentSrc = heartData[idx]?.src;
-        // Overwrite stale local file paths to handle renamed extensions (e.g. foto3.jpg -> foto3.webp)
-        if (!currentSrc || !currentSrc.startsWith("data:")) {
-          if (!heartData[idx]) heartData[idx] = {};
-          heartData[idx].src = src;
-          setHeartPhoto(idx, src);
-          try { localStorage.setItem("bubu_heart", JSON.stringify(heartData)); } catch(ex) {}
-        }
-      };
-      img.onerror = () => tryLoad(exts, i + 1);
-      img.src = src;
-    };
-    // Try exact ext first, then fallbacks
-    const fallbacks = [ext, ...EXTS.filter(e => e !== ext)];
-    tryLoad(fallbacks, 0);
+  PHOTO_SLOTS.forEach((src, idx) => {
+    const currentSrc = heartData[idx]?.src;
+    // Overwrite stale local file paths to handle renamed extensions/stale state
+    if (!currentSrc || !currentSrc.startsWith("data:")) {
+      if (!heartData[idx]) heartData[idx] = {};
+      heartData[idx].src = src;
+      setHeartPhoto(idx, src);
+      try { localStorage.setItem("bubu_heart", JSON.stringify(heartData)); } catch(ex) {}
+    }
   });
 }
 
