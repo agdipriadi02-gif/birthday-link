@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy 20th Birthday, Bubu 💗</title>
+  <meta name="theme-color" content="#1e0510" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&family=Dancing+Script:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ═══ PAGE 0 — PASSWORD LOCK ═══ -->
+  <div id="page-lock" class="page page-active">
+    <div class="lock-bg"></div>
+    <div class="petal-layer" id="petals-lock"></div>
+    <img src="flowers_top.png" class="deco deco-tl" alt="" />
+    <img src="flowers_bottom.png" class="deco deco-br" alt="" />
+    <img src="flowers_scatter.png" class="deco deco-tr small" alt="" />
+
+    <div class="lock-body">
+      <div class="lock-icon-wrap">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-glow"></div>
+      </div>
+
+      <h1 class="lock-title">Spesial Untukmu 💗</h1>
+      <p class="lock-hint">Masukkan kode rahasia kita untuk membuka</p>
+
+      <!-- PIN input display -->
+      <div class="pin-dots" id="pin-dots">
+        <span class="dot" id="d0"></span>
+        <span class="dot" id="d1"></span>
+        <span class="dot" id="d2"></span>
+        <span class="dot" id="d3"></span>
+        <span class="dot" id="d4"></span>
+        <span class="dot" id="d5"></span>
+        <span class="dot" id="d6"></span>
+        <span class="dot" id="d7"></span>
+      </div>
+
+      <p class="lock-error" id="lock-error"></p>
+
+      <!-- Numpad -->
+      <div class="numpad">
+        <button class="np-btn" onclick="npPress('1')">1</button>
+        <button class="np-btn" onclick="npPress('2')">2</button>
+        <button class="np-btn" onclick="npPress('3')">3</button>
+        <button class="np-btn" onclick="npPress('4')">4</button>
+        <button class="np-btn" onclick="npPress('5')">5</button>
+        <button class="np-btn" onclick="npPress('6')">6</button>
+        <button class="np-btn" onclick="npPress('7')">7</button>
+        <button class="np-btn" onclick="npPress('8')">8</button>
+        <button class="np-btn" onclick="npPress('9')">9</button>
+        <button class="np-btn np-del" onclick="npDelete()">⌫</button>
+        <button class="np-btn" onclick="npPress('0')">0</button>
+        <button class="np-btn np-ok" onclick="npSubmit()">✓</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══ PAGE 1 — HOME ═══ -->
+  <div id="page-home" class="page">
+    <div class="home-bg"></div>
+    <div class="petal-layer" id="petals-home"></div>
+    <img src="flowers_top.png" class="deco deco-tl" alt="" />
+    <img src="flowers_bottom.png" class="deco deco-br" alt="" />
+    <img src="flowers_scatter.png" class="deco deco-tr" alt="" />
+    <img src="flowers_top.png" class="deco deco-bl" alt="" />
+    <div class="home-body">
+      <div class="home-badge">✦ 8 Juni 2026 ✦</div>
+      <div class="home-greeting">Happy 20<sup>th</sup> Birthday</div>
+      <h1 class="home-name">Bubu</h1>
+      <button class="btn-next" onclick="goTo('page-menu')">
+        <span>Silahkan Dibuka</span>
+        <span class="btn-arrow">›</span>
+      </button>
+    </div>
+    <canvas id="confetti-canvas" class="confetti-layer"></canvas>
+  </div>
+
+
+  <!-- ═══ PAGE 2 — MENU ═══ -->
+  <div id="page-menu" class="page">
+    <div class="menu-bg"></div>
+    <div class="petal-layer" id="petals-menu"></div>
+    <img src="flowers_top.png" class="deco deco-tl small" alt="" />
+    <img src="flowers_bottom.png" class="deco deco-br small" alt="" />
+    <div class="menu-body">
+      <div class="menu-title-wrap">
+        <h2 class="menu-title">Untuk Bubu 💗</h2>
+      </div>
+      <div class="menu-cards">
+        <button class="menu-card" onclick="goTo('page-photos')">
+          <div class="mc-icon-wrap">
+            <div class="mc-icon">📷</div>
+            <div class="mc-glow"></div>
+          </div>
+          <h3 class="mc-title">Foto Kita 💗</h3>
+          <p class="mc-desc">Jangan Lupa dibuka yaa</p>
+          <span class="mc-arrow">→</span>
+        </button>
+        <button class="menu-card" onclick="goTo('page-message')">
+          <div class="mc-icon-wrap">
+            <div class="mc-icon">📝</div>
+            <div class="mc-glow pink"></div>
+          </div>
+          <h3 class="mc-title">Ucapan 💗 </h3>
+          <p class="mc-desc">Jangan Lupa dibuka yaa</p>
+          <span class="mc-arrow">→</span>
+        </button>
+      </div>
+      <button class="btn-back" onclick="goTo('page-home')">← Kembali</button>
+    </div>
+  </div>
+
+
+  <!-- ═══ PAGE 3 — PHOTO HEART (LOVE SHAPE) ═══ -->
+  <div id="page-photos" class="page">
+    <div class="photos-bg"></div>
+    <div class="petal-layer" id="petals-photos"></div>
+    <img src="flowers_top.png" class="deco deco-tl small" alt="" />
+    <img src="flowers_bottom.png" class="deco deco-br small" alt="" />
+
+    <div class="photos-body">
+      <h2 class="sec-title">📸Our Special Picture Moments</h2>
+
+      <!--
+    ╔══════════════════════════════════════════╗
+    ║  LOVE / HEART SHAPE — square photos     ║
+    ║  Container: 430 × 370px                 ║
+    ║  Each photo: 80 × 80px                  ║
+    ║                                          ║
+    ║  Layout:                                 ║
+    ║  [0][1]    [2][3]    ← two bumps (4)   ║
+    ║  [4][5][6][7][8]     ← wide middle (5) ║
+    ║    [9][10][11]       ← narrowing (3)   ║
+    ║        [12]          ← tip (1)         ║
+    ╚══════════════════════════════════════════╝
+    Gap between bumps: photos 1→2 gap = 40px (clear V-notch)
+    -->
+      <div class="heart-wrap">
+        <div class="heart-container" id="heart-container">
+
+          <!-- TWO BUMPS AT TOP -->
+          <div class="hs sq" id="hs-0" style="left:30px;  top:10px" onclick="clickHeart(0)"><img class="hs-img hidden"
+              id="hi-0" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-1" style="left:115px; top:10px" onclick="clickHeart(1)"><img class="hs-img hidden"
+              id="hi-1" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+
+          <div class="hs sq" id="hs-2" style="left:235px; top:10px" onclick="clickHeart(2)"><img class="hs-img hidden"
+              id="hi-2" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-3" style="left:320px; top:10px" onclick="clickHeart(3)"><img class="hs-img hidden"
+              id="hi-3" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+
+          <!-- WIDE MIDDLE ROW -->
+          <div class="hs sq" id="hs-4" style="left:5px;   top:100px" onclick="clickHeart(4)"><img class="hs-img hidden"
+              id="hi-4" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-5" style="left:90px;  top:80px" onclick="clickHeart(5)"><img class="hs-img hidden"
+              id="hi-5" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-6" style="left:175px; top:72px" onclick="clickHeart(6)"><img class="hs-img hidden"
+              id="hi-6" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-7" style="left:260px; top:80px" onclick="clickHeart(7)"><img class="hs-img hidden"
+              id="hi-7" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-8" style="left:345px; top:100px" onclick="clickHeart(8)"><img class="hs-img hidden"
+              id="hi-8" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+
+          <!-- NARROWING ROW -->
+          <div class="hs sq" id="hs-9" style="left:50px;  top:190px" onclick="clickHeart(9)"><img class="hs-img hidden"
+              id="hi-9" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-10" style="left:175px; top:178px" onclick="clickHeart(10)"><img
+              class="hs-img hidden" id="hi-10" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+          <div class="hs sq" id="hs-11" style="left:300px; top:190px" onclick="clickHeart(11)"><img
+              class="hs-img hidden" id="hi-11" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+
+          <!-- TIP — single photo at bottom point -->
+          <div class="hs sq tip" id="hs-12" style="left:175px; top:278px" onclick="clickHeart(12)"><img
+              class="hs-img hidden" id="hi-12" />
+            <div class="hs-ph-sq">📷</div>
+            <div class="hs-ov">+</div>
+          </div>
+
+        </div>
+      </div>
+
+      <input type="file" id="heart-file" accept="image/*" class="hidden" onchange="handleHeartUpload(event)" />
+      <button class="btn-back" onclick="goTo('page-menu')">← Kembali</button>
+    </div>
+  </div>
+
+
+  <!-- ═══ PAGE 4 — MESSAGE + MUSIC ═══ -->
+  <div id="page-message" class="page">
+    <div class="message-bg"></div>
+    <div class="petal-layer" id="petals-message"></div>
+    <img src="flowers_top.png" class="deco deco-tl small" alt="" />
+    <img src="flowers_bottom.png" class="deco deco-br small" alt="" />
+    <img src="flowers_scatter.png" class="deco deco-tr tiny" alt="" />
+
+    <!-- Paper photos LEFT -->
+    <div class="paper-deco paper-left">
+      <div class="paper-card paper-tilt-1">
+        <div class="paper-inner"><img src="ucapan1.jpg" class="paper-photo" alt=""
+            onerror="this.closest('.paper-card').style.display='none'" /></div>
+        <div class="paper-tape"></div>
+      </div>
+      <div class="paper-card paper-tilt-2">
+        <div class="paper-inner"><img src="ucapan2.jpg" class="paper-photo" alt=""
+            onerror="this.closest('.paper-card').style.display='none'" /></div>
+        <div class="paper-tape tape-r"></div>
+      </div>
+    </div>
+
+    <!-- Paper photos RIGHT -->
+    <div class="paper-deco paper-right">
+      <div class="paper-card paper-tilt-3">
+        <div class="paper-inner"><img src="ucapan3.jpg" class="paper-photo" alt=""
+            onerror="this.closest('.paper-card').style.display='none'" /></div>
+        <div class="paper-tape"></div>
+      </div>
+      <div class="paper-card paper-tilt-4">
+        <div class="paper-inner"><img src="ucapan4.jpg" class="paper-photo" alt=""
+            onerror="this.closest('.paper-card').style.display='none'" /></div>
+        <div class="paper-tape tape-r"></div>
+      </div>
+    </div>
+
+    <!-- Floating music player (side) -->
+    <div class="float-player" id="float-player">
+      <div class="fp-vinyl" id="fp-vinyl">🎵</div>
+      <div class="fp-info">
+        <span class="fp-title">Happy Birthday</span>
+        <span class="fp-sub">untuk Bubu 🌸</span>
+      </div>
+      <button class="fp-btn" id="fp-btn" onclick="toggleMusic()" title="Play / Pause">
+        <span id="player-icon">⏸</span>
+      </button>
+      <div class="fp-bars" id="player-bars">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- Message content -->
+    <div class="msg-body">
+      <h2 class="sec-title">💌Ada sedikit Ucapan Spesial Buat Kamu</h2>
+
+      <div class="msg-card">
+        <div class="msg-top-deco">🌸 ✦ 🌸</div>
+        <p class="msg-headline">Happy 20th birthday, Bubu 💗✨</p>
+        <p class="msg-para">
+          Seneng banget rasanya hari ini bisa ngerayain ulang tahun kamu, dan aku bersyukur banget kita masih bisa
+          ngerayainnya bareng-bareng. Sebelumnya aku mau minta maaf ya sayang karena kadonya sedikit telat, semoga kamu
+          suka dan bisa bermanfaat buat kamu kedepannya.
+        </p>
+        <p class="msg-para">
+          Masuk usia ke-20 ini, doa aku semoga rezeki kamu makin lancar, selalu sehat, dan terus dalam lindungan Allah
+          serta selalu didekatkan dengan-Nya. Semangat juga buat kuliahnya ya, semoga makin lancar, nilainya memuaskan,
+          dan perlahan semua impian kamu bisa terwujud satu per satu. Makasih udah jadi pribadi yang luar biasa, makin
+          dewasa, dan sabar banget ngadepin aku.
+        </p>
+        <p class="msg-closing">
+          Wish you all the best, Bubu. Tetap di samping aku terus ya, sayang. I love you so much Bubu, cantikku,
+          kesayanganku, duniaku! 💓💞💗💖
+        </p>
+        <div class="msg-bot-deco">🌸 ✦ 🌸</div>
+      </div>
+
+      <button class="btn-back" onclick="goTo('page-menu')">← Kembali</button>
+    </div>
+  </div>
+
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox hidden">
+    <div class="lb-back" onclick="closeLb()"></div>
+    <div class="lb-box">
+      <button class="lb-x" onclick="closeLb()">✕</button>
+      <img id="lb-img" src="" alt="" class="lb-img" />
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
