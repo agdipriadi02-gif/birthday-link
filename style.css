@@ -416,53 +416,24 @@ h1.home-name {
 }
 .paper-tape.tape-r { transform:translateX(-50%) rotate(9deg); }
 
-/* ── Mobile: show photos as horizontal row above message ── */
-@media (max-width:1100px) {
-  .paper-deco {
-    position:relative;
-    top:auto; transform:none;
-    left:auto; right:auto;
-    flex-direction:row;
-    gap:.8rem;
-    justify-content:center;
-    flex-wrap:wrap;
-    pointer-events:auto;
-    margin:0 auto 1rem;
-    padding:0 .5rem;
-    width:100%;
-  }
-  .paper-left, .paper-right {
-    left:auto; right:auto;
-  }
-  .paper-card {
-    width:100px;
-    padding:5px 5px 18px;
-  }
-  .paper-tilt-1 { transform:rotate(-3deg); }
-  .paper-tilt-2 { transform:rotate( 2deg); }
-  .paper-tilt-3 { transform:rotate( 3deg); }
-  .paper-tilt-4 { transform:rotate(-2deg); }
-}
+/* ── Hide sidebar paper-deco (photos shown in-flow via mobile-photos-row) ── */
+.paper-deco { display:none; }
 
-/* ── Mobile Photos Row (inside msg-body) ── */
+/* ── Photos Row (inside msg-body, always visible) ── */
 .mobile-photos-row {
-  display:none; /* hidden on desktop */
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:1rem;
+  margin-bottom:1.8rem;
+  padding:0 .5rem;
+  width:100%;
+  max-width:560px;
 }
-@media (max-width:1100px) {
-  .mobile-photos-row {
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:.8rem;
-    margin-bottom:1.5rem;
-    padding:0 .5rem;
-    width:100%;
-  }
-  .mobile-photos-row .paper-card {
-    width:calc(50% - 1rem);
-    max-width:140px;
-    padding:5px 5px 18px;
-  }
+.mobile-photos-row .paper-card {
+  width:calc(50% - 1rem);
+  max-width:150px;
+  padding:6px 6px 20px;
 }
 
 /* ── Message body ── */
