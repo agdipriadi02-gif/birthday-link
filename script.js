@@ -158,16 +158,13 @@ function initPetals(id) {
    AUTO-LOAD LOCAL PHOTOS INTO HEART
    ============================================ */
 function autoLoadPhotos() {
+  // Always force-load from PHOTO_SLOTS — ignore localStorage for local files
   PHOTO_SLOTS.forEach((src, idx) => {
-    const currentSrc = heartData[idx]?.src;
-    // Overwrite stale local file paths to handle renamed extensions/stale state
-    if (!currentSrc || !currentSrc.startsWith("data:")) {
-      if (!heartData[idx]) heartData[idx] = {};
-      heartData[idx].src = src;
-      setHeartPhoto(idx, src);
-      try { localStorage.setItem("bubu_heart", JSON.stringify(heartData)); } catch(ex) {}
-    }
+    if (!heartData[idx]) heartData[idx] = {};
+    heartData[idx].src = src;
+    setHeartPhoto(idx, src);
   });
+  try { localStorage.setItem("bubu_heart", JSON.stringify(heartData)); } catch(ex) {}
 }
 
 
@@ -176,8 +173,9 @@ function autoLoadPhotos() {
    ============================================ */
 function initPhotosPage() {
   initPetals("petals-photos");
-  Object.entries(heartData).forEach(([idx, d]) => {
-    if (d.src) setHeartPhoto(parseInt(idx), d.src);
+  // Re-apply all photos when entering the page
+  PHOTO_SLOTS.forEach((src, idx) => {
+    setHeartPhoto(idx, heartData[idx]?.src || src);
   });
 }
 
@@ -218,12 +216,30 @@ function setHeartPhoto(idx, src) {
   
   let finalSrc = src;
   if (src && !src.startsWith("data:") && !src.includes("?")) {
-    finalSrc = src + "?v=" + new Date().getTime();
+    finalSrc = src + "?v=" + Date.now();
   }
   
   imgEl.src = finalSrc;
   imgEl.classList.remove("hidden");
   if (ph) ph.style.display = "none";
+
+  // If image fails to load, try other extensions
+  imgEl.onerror = function() {
+    const baseName = src.replace(/\.[^.]+$/, "");
+    const tried = src.replace(/\?.*$/, "");
+    const extsToTry = ["jpg","jpeg","webp","png","JPG"];
+    for (const ext of extsToTry) {
+      const candidate = baseName + "." + ext;
+      if (candidate !== tried) {
+        imgEl.onerror = null; // prevent infinite loop
+        imgEl.src = candidate + "?v=" + Date.now();
+        return;
+      }
+    }
+    // If all fail, still show placeholder
+    imgEl.classList.add("hidden");
+    if (ph) ph.style.display = "";
+  };
 }
 
 
