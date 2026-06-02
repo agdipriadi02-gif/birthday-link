@@ -73,8 +73,6 @@ let lbSrc       = "";
 
 /* ── MUSIC ────────────────────────────────── */
 let musicOn     = false;
-let audioCtx    = null;
-let musicStopFn = null;
 
 /* ── PHOTO SLOTS ──────────────────────────── */
 // Files: foto1.jpg (or .webp) placed in project root
@@ -272,35 +270,94 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") closeLb(); }
 
 
 /* ============================================
-   MUSIC — Happy Birthday (Web Audio API)
+   MUSIC — YouTube IFrame Player API
+   Video: https://youtu.be/vhVBWw6rId0
    ============================================ */
-const HBD = [
-  {f:392.00,d:.30},{f:392.00,d:.10},
-  {f:440.00,d:.40},{f:392.00,d:.40},{f:523.25,d:.40},{f:493.88,d:.80},
-  {f:392.00,d:.30},{f:392.00,d:.10},
-  {f:440.00,d:.40},{f:392.00,d:.40},{f:587.33,d:.40},{f:523.25,d:.80},
-  {f:392.00,d:.30},{f:392.00,d:.10},
-  {f:784.00,d:.40},{f:659.25,d:.40},{f:523.25,d:.40},{f:493.88,d:.40},{f:440.00,d:.40},
-  {f:698.46,d:.30},{f:698.46,d:.10},
-  {f:659.25,d:.40},{f:523.25,d:.40},{f:587.33,d:.40},{f:523.25,d:1.00},
-];
-const TOTAL_DUR = HBD.reduce((s,n) => s + n.d, 0);
+let ytPlayer = null;
+let ytReady  = false;
+let ytPendingPlay = false;
+
+// Load YouTube IFrame API
+function loadYouTubeAPI() {
+  if (document.getElementById("yt-api-script")) return;
+  const tag = document.createElement("script");
+  tag.id  = "yt-api-script";
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+}
+
+// Called automatically by YouTube API when ready
+window.onYouTubeIframeAPIReady = function() {
+  // Create a hidden container for the player
+  let container = document.getElementById("yt-player-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "yt-player-container";
+    container.style.cssText = "position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none;";
+    document.body.appendChild(container);
+    const div = document.createElement("div");
+    div.id = "yt-player";
+    container.appendChild(div);
+  }
+
+  ytPlayer = new YT.Player("yt-player", {
+    videoId: "vhVBWw6rId0",
+    playerVars: {
+      autoplay: 0,
+      loop: 1,
+      playlist: "vhVBWw6rId0",  // required for loop
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      modestbranding: 1,
+      rel: 0,
+      playsinline: 1
+    },
+    events: {
+      onReady: function(e) {
+        ytReady = true;
+        e.target.setVolume(80);
+        if (ytPendingPlay) {
+          ytPendingPlay = false;
+          startMusic();
+        }
+      },
+      onStateChange: function(e) {
+        // When video ends, loop it
+        if (e.data === YT.PlayerState.ENDED) {
+          e.target.seekTo(0);
+          e.target.playVideo();
+        }
+      }
+    }
+  });
+};
+
+// Load API on page load
+loadYouTubeAPI();
 
 function toggleMusic() {
   musicOn ? stopMusic() : startMusic();
 }
 
 function startMusic() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === "suspended") audioCtx.resume();
+  if (!ytReady) {
+    ytPendingPlay = true;
+    loadYouTubeAPI();
+    return;
+  }
+  try {
+    ytPlayer.playVideo();
+  } catch(e) {}
   musicOn = true;
   setMusicUI(true);
-  playLoop();
 }
 
 function stopMusic() {
   musicOn = false;
-  if (musicStopFn) { musicStopFn(); musicStopFn = null; }
+  try {
+    if (ytPlayer && ytReady) ytPlayer.pauseVideo();
+  } catch(e) {}
   setMusicUI(false);
 }
 
@@ -311,44 +368,6 @@ function setMusicUI(on) {
   if (icon)  icon.textContent = on ? "⏸" : "▶";
   if (bars)  bars.classList.toggle("active", on);
   if (vinyl) vinyl.classList.toggle("paused", !on);
-}
-
-function playLoop() {
-  if (!audioCtx || !musicOn) return;
-
-  const master = audioCtx.createGain();
-  master.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  master.connect(audioCtx.destination);
-
-  const delay = audioCtx.createDelay(.6);
-  delay.delayTime.value = .32;
-  const fb = audioCtx.createGain(); fb.gain.value = .18;
-  delay.connect(fb); fb.connect(delay); delay.connect(master);
-
-  let t = audioCtx.currentTime + .05;
-  const oscs = [];
-
-  HBD.forEach(note => {
-    const o1 = audioCtx.createOscillator(); o1.type = "sine";     o1.frequency.value = note.f;
-    const o2 = audioCtx.createOscillator(); o2.type = "triangle"; o2.frequency.value = note.f * 1.002;
-    const g  = audioCtx.createGain();
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(1, t + .025);
-    g.gain.setValueAtTime(1, t + note.d * .72);
-    g.gain.exponentialRampToValueAtTime(.001, t + note.d);
-    o1.connect(g); o2.connect(g); g.connect(master); g.connect(delay);
-    o1.start(t); o1.stop(t + note.d);
-    o2.start(t); o2.stop(t + note.d);
-    oscs.push(o1, o2);
-    t += note.d;
-  });
-
-  const loopTimer = setTimeout(() => { if (musicOn) playLoop(); }, (TOTAL_DUR + .5) * 1000);
-  musicStopFn = () => {
-    clearTimeout(loopTimer);
-    oscs.forEach(o => { try { o.stop(); } catch(e) {} });
-    master.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + .3);
-  };
 }
 
 
