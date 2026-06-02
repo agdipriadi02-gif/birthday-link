@@ -399,6 +399,7 @@ h1.home-name {
   border-radius:3px; width:130px; pointer-events:auto;
   box-shadow:0 6px 24px rgba(0,0,0,.6),0 2px 6px rgba(0,0,0,.35);
   transition:transform .4s ease;
+  flex-shrink:0;
 }
 .paper-card:hover { transform:rotate(0deg) scale(1.07) !important; z-index:10; }
 .paper-tilt-1 { transform:rotate(-4deg); }
@@ -414,7 +415,55 @@ h1.home-name {
   box-shadow:0 1px 3px rgba(0,0,0,.2); border-radius:2px;
 }
 .paper-tape.tape-r { transform:translateX(-50%) rotate(9deg); }
-@media (max-width:1100px) { .paper-deco { display:none; } }
+
+/* ── Mobile: show photos as horizontal row above message ── */
+@media (max-width:1100px) {
+  .paper-deco {
+    position:relative;
+    top:auto; transform:none;
+    left:auto; right:auto;
+    flex-direction:row;
+    gap:.8rem;
+    justify-content:center;
+    flex-wrap:wrap;
+    pointer-events:auto;
+    margin:0 auto 1rem;
+    padding:0 .5rem;
+    width:100%;
+  }
+  .paper-left, .paper-right {
+    left:auto; right:auto;
+  }
+  .paper-card {
+    width:100px;
+    padding:5px 5px 18px;
+  }
+  .paper-tilt-1 { transform:rotate(-3deg); }
+  .paper-tilt-2 { transform:rotate( 2deg); }
+  .paper-tilt-3 { transform:rotate( 3deg); }
+  .paper-tilt-4 { transform:rotate(-2deg); }
+}
+
+/* ── Mobile Photos Row (inside msg-body) ── */
+.mobile-photos-row {
+  display:none; /* hidden on desktop */
+}
+@media (max-width:1100px) {
+  .mobile-photos-row {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:.8rem;
+    margin-bottom:1.5rem;
+    padding:0 .5rem;
+    width:100%;
+  }
+  .mobile-photos-row .paper-card {
+    width:calc(50% - 1rem);
+    max-width:140px;
+    padding:5px 5px 18px;
+  }
+}
 
 /* ── Message body ── */
 .msg-body {
